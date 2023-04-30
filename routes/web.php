@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modelo\UsuarioDao;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/api/usuarios/{alias}/{contrasena}', function ($alias,$contrasena) {
+    $usuarioDAO = new UsuarioDao();
+    $usuario = $usuarioDAO->consulta($alias,$contrasena); // Método para obtener un usuario por alias y contraseña
+    if (!$usuario) {
+        return response()->json(['error' => 'Usuario no encontrado'], 404);
+    }
+    return response()->json(["usuario" => $usuario->getNombre(),"contraseña" => $usuario->getContrasena()]);
+});
+
+
