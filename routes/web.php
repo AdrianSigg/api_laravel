@@ -1,30 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modelo\UsuarioDao;
+use App\Models\UsuarioDao;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+session_start(); // Iniciar sesión
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/api/usuarios/{alias}/{contrasena}', function ($alias,$contrasena) {
+// Endpoint para el inicio de sesion
+Route::get('/api/login/{username}/{contrasena}', function ($username,$contrasena) {
     $usuarioDAO = new UsuarioDao();
-    $usuario = $usuarioDAO->consulta($alias,$contrasena); // Método para obtener un usuario por alias y contraseña
+    $usuario = $usuarioDAO->consulta($username,$contrasena); // Método para obtener un usuario por username y contraseña
     if (!$usuario) {
-        return response()->json(['error' => 'Usuario no encontrado'], 404);
+        return response()->json(['error' => 'Credenciales inválidas, intente nuevamente']);
     }
-    return response()->json(["usuario" => $usuario->getNombre(),"contraseña" => $usuario->getContrasena()]);
+
+    // Verificar las credenciales del usuario aquí
+    if ($usuario->getUsername() && $usuario->getContrasena()) {
+        // Generar un token de sesión único para el usuario
+        $token = md5(uniqid($username, true));
+
+        // Guardar el token de sesión en una variable de sesión
+        $_SESSION['token'] = $token;
+
+        // Devolver el token de sesión como parte de la respuesta JSON
+        return response()->json(['token' => $token, 'user'=> $username, 'email'=> $username, 'mensaje' => 'Inició sesión correctamente']);
+    } else {
+        return response()->json(['error' => 'Credenciales inválidas'], 401);
+    }
+});
+
+// Endpoint para el verificar la sesión del usuario
+Route::get('/api/verificar-sesion', function () {
+    if (isset($_SESSION['token'])) {
+        return response()->json(['token' => $_SESSION['token']]);
+    } else {
+        return response()->json(['error' => 'Sesión no encontrada'], 401);
+    }
 });
 
 
+// Endpoint para el registro
+Route::get('/api/signin/{usuario}/{contrasena}/{correo}', function ($username,$contrasena,$correo) {
+    $usuarioDAO = new UsuarioDao();
+    $usuario = $usuarioDAO->agrega($username,$contrasena,$correo); // Método para obtener un usuario por username y contraseña
+    if (!$usuario) {
+        return response()->json(['error' => 'Usuario no encontrado'], 404);
+    }
+    return response()->json(["response" => 'Usuario agregado correctamente']);
+});
+
+// Endpoint para cerrar sesión
+Route::get('/api/logout', function () {
+    session_destroy(); // Cierra sesión
+    return response()->json(['response' => 'Sesión cerrada correctamente']);
+});

@@ -1,5 +1,5 @@
 <?php
-    namespace App\Modelo;
+    namespace App\Models;
     class Usuario
     {
         //----- Atributos
@@ -12,11 +12,8 @@
         public function setId($id_int){
             $this->id_int=$id_int;
         }
-        public function setNombre($nombre_str){
+        public function setUsername($nombre_str){
             $this->nombre_str= $nombre_str;
-        }
-        public function setAlias($alias_str){
-            $this->alias_str= $alias_str;
         }
         public function setContrasena($contrasena_str){
             $this->contrasena_str= $contrasena_str;
@@ -26,7 +23,7 @@
         public function getId(){
             return $this->id_int;
         }
-        public function getNombre(){
+        public function getUsername(){
             return $this->nombre_str;
         }
         public function getAlias(){

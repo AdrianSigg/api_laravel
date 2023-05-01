@@ -1,5 +1,5 @@
 <?php
-namespace App\Modelo;
+namespace App\Models;
 use \pdo;
 include("usuario.php");
 class UsuarioDao
@@ -46,7 +46,7 @@ class UsuarioDao
             $fila = $resultado->fetch();
             $usuario = new Usuario();
             $usuario->setId($fila["id"]);
-            $usuario->setNombre($fila["usuario"]);
+            $usuario->setUsername($fila["usuario"]);
             $usuario->setContrasena($fila["contrasena"]);
         }
 
@@ -65,16 +65,15 @@ class UsuarioDao
         $this->conexion->query($csql);
     }
 
-    public function agrega($usuario)
+    public function agrega($alias, $contrasena, $correo)
     {
-
         $this->conecta();
 
-        $csql = "insert into usuario ( "
-            . "nombre, contrasena, alias ) "
-            . "values ( '{$usuario->getNombre()}',
-                    '{$usuario->getContrasena()}' ,
-                    '{$usuario->getAlias()}')";
+        $csql = "insert into usuarios ( "
+            . "usuario, contrasena, correo ) "
+            . "values ( '{$alias}',
+                    '{$contrasena}' ,
+                    '{$correo}')";
         // echo $csql;
         $resultado = $this->conexion->query($csql);
         return $resultado;
@@ -85,7 +84,7 @@ class UsuarioDao
 
         $this->conecta();
 
-        $csql = "UPDATE usuario SET nombre = '{$usuario->getNombre()}',
+        $csql = "UPDATE usuario SET nombre = '{$usuario->getUsername()}',
                  contrasena = '{$usuario->getContrasena()}', alias = '{$usuario->getAlias()}'
                  WHERE id = {$usuario->getId()}";
 
@@ -108,8 +107,7 @@ class UsuarioDao
         } else {
             $fila = $resultado->fetch(PDO::FETCH_ASSOC);
             $usuario->setId($fila["id"]);
-            $usuario->setNombre($fila["nombre"]);
-            $usuario->setAlias($fila["alias"]);
+            $usuario->setUsername($fila["nombre"]);
             $usuario->setContrasena($fila["contrasena"]);
         }
 
