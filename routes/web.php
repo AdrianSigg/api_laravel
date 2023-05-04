@@ -1,5 +1,14 @@
 <?php
 
+/* Crear un nuevo endpoint para hacer una consulta
+donde con el id del usuario de la sesión del tipo
+select correo from usuarios where id='x' AND user = 'x'
+para crear el token y de respuesta de el token
+
+$_SESSION['token'] = generarToken();
+*/
+
+use App\Models\CatalogoDAO;
 use Illuminate\Support\Facades\Route;
 use App\Models\UsuarioDao;
 
@@ -32,16 +41,6 @@ Route::get('/api/login/{username}/{contrasena}', function ($username,$contrasena
     }
 });
 
-// Endpoint para el verificar la sesión del usuario
-Route::get('/api/verificar-sesion', function () {
-    if (isset($_SESSION['token'])) {
-        return response()->json(['token' => $_SESSION['token']]);
-    } else {
-        return response()->json(['error' => 'Sesión no encontrada'], 401);
-    }
-});
-
-
 // Endpoint para el registro
 Route::get('/api/signin/{usuario}/{contrasena}/{correo}', function ($username,$contrasena,$correo) {
     $usuarioDAO = new UsuarioDao();
@@ -56,4 +55,26 @@ Route::get('/api/signin/{usuario}/{contrasena}/{correo}', function ($username,$c
 Route::get('/api/logout', function () {
     session_destroy(); // Cierra sesión
     return response()->json(['response' => 'Sesión cerrada correctamente']);
+});
+
+// Endpoint para recuperar los productos de la tienda
+Route::get('/api/catalogo/{tipo}', function ($tipo) {
+
+    $catalogoDAO = new CatalogoDAO;
+    $resultado = $catalogoDAO->consultaCatalogo($tipo);
+    if (!$resultado) {
+        return response()->json(['error' => 'No hay artículos'], 404);
+    }
+    return response()->json(["data"=>$resultado]);
+});
+
+// Endpoint para recuperar los productos según la colección hombre o mujer
+Route::get('/api/coleccion/{sexo}', function ($sexo) {
+
+    $catalogoDAO = new CatalogoDAO;
+    $resultado = $catalogoDAO->coleccion($sexo);
+    if (!$resultado) {
+        return response()->json(['error' => 'No hay artículos'], 404);
+    }
+    return response()->json(["data"=>$resultado]);
 });

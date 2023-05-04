@@ -14,7 +14,7 @@ class UsuarioDao
 
     // ------Función de conectar
 
-    private function conecta()
+    public function conecta()
     {
         $conexion = new pdo(
             $this->dsn,
@@ -22,7 +22,7 @@ class UsuarioDao
             $this->pass
         );
         $this->conexion = $conexion;
-        return;
+        return $conexion;
     }
     // -----Función de consultar
 
