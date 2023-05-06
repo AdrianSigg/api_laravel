@@ -78,3 +78,14 @@ Route::get('/api/coleccion/{sexo}', function ($sexo) {
     }
     return response()->json(["data"=>$resultado]);
 });
+
+// Endpoint para recuperar los productos según la colección hombre o mujer
+Route::get('/api/producto/{id}', function ($id) {
+
+    $catalogoDAO = new CatalogoDAO;
+    $resultado = $catalogoDAO->producto($id);
+    if (!$resultado) {
+        return response()->json(['error' => 'No hay artículos'], 404);
+    }
+    return response()->json(["data"=>$resultado]);
+});
