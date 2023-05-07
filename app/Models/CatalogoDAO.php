@@ -54,7 +54,7 @@ class catalogoDAO{
             $catalogo = array();
 
             // Crear la sentencia sql de busqueda
-            $csql = "SELECT nombre, precio, imagen FROM productos WHERE genero = :sexo";
+            $csql = "SELECT id, nombre, precio, imagen FROM productos WHERE genero = :sexo";
 
             $consulta = $this->conexion->prepare($csql);
             $consulta->bindValue(':sexo', $sexo, \PDO::PARAM_STR);
@@ -66,6 +66,7 @@ class catalogoDAO{
             } else {
                 foreach ($resultado as $fila) {
                     $producto = array(
+                        "id" => $fila["id"],
                         "nombre" => $fila["nombre"],
                         "precio" => $fila["precio"],
                         "imagen" => $fila["imagen"]
