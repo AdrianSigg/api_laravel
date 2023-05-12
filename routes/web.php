@@ -41,3 +41,6 @@ Route::get('api/coleccion/{sexo}', [CatalogoController::class, 'getProductos'])-
 
 // Endpoint para recuperar los productos según la colección hombre o mujer
 Route::get('api/producto/{id}', [CatalogoController::class, 'getColeccion'])->name('getColeccion');
+
+// Endpoint para guardar los productos en favoritos
+Route::get('api/favoritos/{id_usuario}/{id_producto}', [CatalogoController::class, 'favoritos'])->name('favoritos');

@@ -56,7 +56,7 @@ class AuthController extends Controller
     function logout($token) {
         $usuarioDAO = new UsuarioDao();
         $usuarioDAO->borraToken($token);
-        return response()->json(['response' => 'Sesión cerrada correctamente']);
+        return response()->json(['data' => 'Sesión cerrada correctamente']);
     }
 
     function getToken($token){

@@ -59,7 +59,6 @@ class UsuarioDao
         }
     }
 
-
     // ----- Funcion para consultar perfil
     public function perfil($token)
     {
@@ -120,7 +119,6 @@ class UsuarioDao
         try {
             $this->conexion = $this->conecta();
 
-            // Crear la sentencia sql de busqueda
             // Crear la sentencia sql de busqueda
             $csql = "UPDATE usuarios SET token = NULL WHERE token = :token";
             $consulta = $this->conexion->prepare($csql);
