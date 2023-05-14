@@ -78,6 +78,7 @@ class UsuarioDao
             } else {
                 foreach ($resultado as $fila) {
                     $info = array(
+                        "id" => $fila["id"],
                         "nombre" => $fila["usuario"],
                         "correo" => $fila["correo"]
                     );

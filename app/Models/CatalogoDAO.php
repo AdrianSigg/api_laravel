@@ -156,4 +156,24 @@ class catalogoDAO
             throw new \Exception("Error al agregar a favoritos: " . $e->getMessage());
         }
     }
+
+    public function getFavoritos($id_usuario)
+    {
+        try {
+            $this->conexion = $this->objetoUsuarioDAO->conecta();
+
+            // Agregar el id_producto a la lista de favoritos
+            $csql = "SELECT id_productos FROM favoritos WHERE id_usuario = '$id_usuario'";
+            $consulta = $this->conexion->prepare($csql);
+            $consulta->execute();
+
+            // Guardar los resultados en una variable
+            $resultado = $consulta->fetchAll(\PDO::FETCH_COLUMN);
+
+            return json_encode($resultado);
+        } catch (\PDOException $e) {
+            // Manejar la excepción
+            throw new \Exception("Error al obtener favoritos: " . $e->getMessage());
+        }
+    }
 }

@@ -45,4 +45,14 @@ class CatalogoController extends Controller
         }
         return response()->json(["data"=>$resultado]);
     }
+
+    // ----- Recuperar favoritos
+    function getFavoritos($id_usuario) {
+        $catalogoDAO = new CatalogoDAO;
+        $resultado = $catalogoDAO->getFavoritos($id_usuario);
+        if (!$resultado) {
+            return response()->json(['error' => 'error'], 404);
+        }
+        return response()->json(["data"=>$resultado]);
+    }
 }

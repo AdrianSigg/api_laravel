@@ -44,3 +44,6 @@ Route::get('api/producto/{id}', [CatalogoController::class, 'getColeccion'])->na
 
 // Endpoint para guardar los productos en favoritos
 Route::get('api/favoritos/{id_usuario}/{id_producto}', [CatalogoController::class, 'favoritos'])->name('favoritos');
+
+// Endpoint para recuperar los productos en favoritos
+Route::get('api/getFavoritos/{id_usuario}', [CatalogoController::class, 'getFavoritos'])->name('getFavoritos');
