@@ -146,7 +146,7 @@ class catalogoDAO
             }
 
             // Agregar el id_producto a la lista de favoritos
-            $csql = "UPDATE favoritos SET id_productos = CONCAT(id_productos, ', $id_producto') WHERE id_usuario = '$id_usuario'";
+            $csql = "UPDATE favoritos SET id_productos = IFNULL(CONCAT(id_productos, ', $id_producto'), '$id_producto') WHERE id_usuario = '$id_usuario'";
             $consulta = $this->conexion->prepare($csql);
             $consulta->execute();
 
@@ -174,6 +174,56 @@ class catalogoDAO
         } catch (\PDOException $e) {
             // Manejar la excepción
             throw new \Exception("Error al obtener favoritos: " . $e->getMessage());
+        }
+    }
+
+    public function carrito($id_usuario, $id_producto)
+    {
+        try {
+            $this->conexion = $this->objetoUsuarioDAO->conecta();
+
+            // Verificar si el id_producto ya está presente en la lista de carrito del usuario
+            $csql = "SELECT id_carrito FROM carrito WHERE id = '$id_usuario'";
+            $consulta = $this->conexion->prepare($csql);
+            $consulta->execute();
+            $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+
+            if ($resultado !== false) {
+                $id_carrito = explode(",", $resultado["id_carrito"]);
+                if (in_array($id_producto, $id_carrito)) {
+                    return json_encode(["mensaje" => "El producto ya está en la lista de carrito"]);
+                }
+            }
+
+            // Agregar el id_producto a la lista de carrito
+            $csql = "UPDATE carrito SET id_carrito = IFNULL(CONCAT(id_carrito, ', $id_producto'), '$id_producto') WHERE id = '$id_usuario'";
+            $consulta = $this->conexion->prepare($csql);
+            $consulta->execute();
+
+            return json_encode(["mensaje" => "Producto agregado a carrito"]);
+        } catch (\PDOException $e) {
+            // Manejar la excepción
+            throw new \Exception("Error al agregar a carrito: " . $e->getMessage());
+        }
+    }
+
+    public function getCarrito($id_usuario)
+    {
+        try {
+            $this->conexion = $this->objetoUsuarioDAO->conecta();
+
+            // Agregar el id_producto a la lista de Carrito
+            $csql = "SELECT id_carrito FROM carrito WHERE id = '$id_usuario'";
+            $consulta = $this->conexion->prepare($csql);
+            $consulta->execute();
+
+            // Guardar los resultados en una variable
+            $resultado = $consulta->fetchAll(\PDO::FETCH_COLUMN);
+
+            return json_encode($resultado);
+        } catch (\PDOException $e) {
+            // Manejar la excepción
+            throw new \Exception("Error al obtener Carrito: " . $e->getMessage());
         }
     }
 }

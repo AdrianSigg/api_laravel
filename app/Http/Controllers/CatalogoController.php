@@ -55,4 +55,24 @@ class CatalogoController extends Controller
         }
         return response()->json(["data"=>$resultado]);
     }
+
+    // ----- Guardar Carrito
+    function carrito($id_usuario, $id_producto) {
+        $catalogoDAO = new CatalogoDAO;
+        $resultado = $catalogoDAO->carrito($id_usuario, $id_producto);
+        if (!$resultado) {
+            return response()->json(['error' => ''], 404);
+        }
+        return response()->json(["data"=>$resultado]);
+    }
+
+    // ----- Recuperar Carrito
+    function getCarrito($id_usuario) {
+        $catalogoDAO = new CatalogoDAO;
+        $resultado = $catalogoDAO->getCarrito($id_usuario);
+        if (!$resultado) {
+            return response()->json(['error' => 'error'], 404);
+        }
+        return response()->json(["data"=>$resultado]);
+    }
 }

@@ -47,3 +47,9 @@ Route::get('api/favoritos/{id_usuario}/{id_producto}', [CatalogoController::clas
 
 // Endpoint para recuperar los productos en favoritos
 Route::get('api/getFavoritos/{id_usuario}', [CatalogoController::class, 'getFavoritos'])->name('getFavoritos');
+
+// Endpoint para guardar los productos en carrito
+Route::get('api/carrito/{id_usuario}/{id_producto}', [CatalogoController::class, 'carrito'])->name('carrito');
+
+// Endpoint para recuperar los productos en carrito
+Route::get('api/getCarrito/{id_usuario}', [CatalogoController::class, 'getCarrito'])->name('getCarrito');
