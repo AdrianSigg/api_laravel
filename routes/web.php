@@ -53,3 +53,6 @@ Route::get('api/carrito/{id_usuario}/{id_producto}', [CatalogoController::class,
 
 // Endpoint para recuperar los productos en carrito
 Route::get('api/getCarrito/{id_usuario}', [CatalogoController::class, 'getCarrito'])->name('getCarrito');
+
+// Endpoint para actualizar los articulos después de una compra
+Route::get('api/compra/{id_producto}/{talla}/{cantidad}', [CatalogoController::class, 'compra'])->name('compra');

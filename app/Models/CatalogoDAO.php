@@ -226,4 +226,28 @@ class catalogoDAO
             throw new \Exception("Error al obtener Carrito: " . $e->getMessage());
         }
     }
+
+    public function compra($id_producto, $talla, $cantidad)
+    {
+        try {
+            $this->conexion = $this->objetoUsuarioDAO->conecta();
+
+            // Agregar el id_producto a la lista de Carrito
+            $csql = "UPDATE existencia SET cantidad = cantidad - :cantidad WHERE id_producto = :id_producto AND talla = :talla";
+            $consulta = $this->conexion->prepare($csql);
+            $consulta->bindParam(':id_producto', $id_producto);
+            $consulta->bindParam(':talla', $talla);
+            $consulta->bindParam(':cantidad', $cantidad);
+            $consulta->execute();
+
+            // Guardar los resultados en una variable
+            $resultado = $consulta->fetchAll(\PDO::FETCH_COLUMN);
+            $resultados[] = $resultado;
+
+            return json_encode($resultados);
+        } catch (\PDOException $e) {
+            // Manejar la excepción
+            throw new \Exception("Error al obtener Carrito: " . $e->getMessage());
+        }
+    }
 }

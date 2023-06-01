@@ -75,4 +75,14 @@ class CatalogoController extends Controller
         }
         return response()->json(["data"=>$resultado]);
     }
+
+    // ----- Actualizar artículos después de compras
+    function compra($id_producto, $talla, $cantidad) {
+        $catalogoDAO = new CatalogoDAO;
+        $resultado = $catalogoDAO->compra($id_producto, $talla, $cantidad);
+        if (!$resultado) {
+            return response()->json(['error' => 'error'], 404);
+        }
+        return response()->json(["data"=>$resultado]);
+    }
 }
